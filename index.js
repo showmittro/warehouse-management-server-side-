@@ -41,6 +41,22 @@ async function run(){
             const result = await inventoryCollection.insertOne(newService);
             res.send(result);
         });
+         // Put
+         app.put('/inventory/:serviceId', async(req, res) =>{
+            const query={_id: ObjectId(req.params.serviceId)};
+            const count = req.body.quantity 
+            const options = { upsert: true }
+            const updatedProduct = {
+                $set: {
+                    quantity: count
+                }
+            }
+            const result = await inventoryCollection.updateOne(query,updatedProduct , options)
+            res.send(result)
+           
+        });
+
+        
 
     }
     finally{}
