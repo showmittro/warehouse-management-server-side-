@@ -19,6 +19,7 @@ async function run(){
     try{
         await client.connect();
         const inventoryCollection = client.db('biycleInventory').collection('inventory')
+        const stockCollection = client.db('biycleInventory').collection('stock');
 
         app.get('/inventory', async(req,res) =>{
             const query ={};
@@ -64,6 +65,45 @@ async function run(){
             res.send(result);
         });
 
+        // stock item
+    app.post('/stock', async (req, res) => {
+        const stock = req.body;
+        const result = await stockCollection.insertOne(stock);
+        res.send(result);
+      })
+      app.get('/stock', async(req,res) =>{
+        const query ={};
+        const cursor = stockCollection.find(query);
+        const stock = await cursor.toArray();
+
+        res.send(stock);
+
+    })
+       
+      app.get('/stock', async (req, res) => {
+        const email = req.query.email;
+        const query = { email: email };
+        const cursor = stockCollection.find(query);
+        const item = await cursor.toArray();
+        res.send(item);
+      })
+      app.get('/stock', async(req,res) =>{
+        const query ={};
+        const cursor = stockCollection.find(query);
+        const stock = await cursor.toArray();
+
+        res.send(stock);
+
+    })
+ 
+  // delete stock
+      app.delete('/stock/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) }
+        const result = await stockCollection.deleteOne(query);
+        res.send(result);
+      })
+  
         
 
     }
